@@ -308,6 +308,27 @@ public void setSnoozeValue(int snoozeValue) {
 나는 그래서 이런 작업을 책임질 커스텀뷰를 만들었고 기존 로직은 크게 수정하지 않을 수 있었다.  
 <br>
 
+# 결과
+## 영어
+### 설정창
+<img width="640" src="https://user-images.githubusercontent.com/57310034/101276447-3ffa9e80-37f0-11eb-89cc-d6aa74402401.png">
+
+### 다이얼로그
+<img width="640" src="https://user-images.githubusercontent.com/57310034/101276468-6a4c5c00-37f0-11eb-9088-66be9de6fbff.png">
+
+### 메인화면
+<img width="640" src="https://user-images.githubusercontent.com/57310034/101276495-8fd96580-37f0-11eb-9605-243e6faedfff.png"/>
+
+## 한국어
+
+### 설정창
+<img width="300" src="https://user-images.githubusercontent.com/57310034/101270382-dbbde780-37bb-11eb-9b83-7161093248d6.png">
+
+### 다이얼로그
+<p>
+<img width="640" src="https://user-images.githubusercontent.com/57310034/101276520-cdd68980-37f0-11eb-9780-0009292cf2ce.png"/>
+
+
 끝
 
 # 참조
