@@ -50,7 +50,7 @@ tags:
 
 ### 시스템 서비스 접근
 
-`Activity Manager` 외에 다른 `Manager`들도 클라이언트와 서버로 이루어져있고, 서버는 시스템 서비스 형태로 존재한다. 앱에서 여기에 접근할 때는 `Context#getSystemService(Sring name)` 메서드를 사용한다.` 하지만 서버는 앱 프로세스와는 별도로 `system_server` 프로세스에서 실행되므로 앱에서 시스템 서비스에 접근하려면 `Binder IPC`를 이용한 프로세스 간 통신이 필요하다.  
+`Activity Manager` 외에 다른 `Manager`들도 클라이언트와 서버로 이루어져있고, 서버는 시스템 서비스 형태로 존재한다. 앱에서 여기에 접근할 때는 `Context#getSystemService(Sring name)` 메서드를 사용한다. 하지만 서버는 앱 프로세스와는 별도로 `system_server` 프로세스에서 실행되므로 앱에서 시스템 서비스에 접근하려면 `Binder IPC`를 이용한 프로세스 간 통신이 필요하다.  
 <br>
 
 ## Native C/C++ Libraries
