@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "안드로이드 프레임워크에 대해 - (1)"
+title: "안드로이드 프레임워크에 대해"
 subtitle: "안드로이드 아키텍처 소프트웨어 스택 분석"
 author: "GuGyu"
 header-style: text
