@@ -16,13 +16,13 @@ tags:
 
 <br>
 
-# UI 처리를 위한 메인 스레드
+# 1. UI 처리를 위한 메인 스레드
 
-안드로이드 어플리케이션은 CPU의 성능을 최대한 끌어올리기 위해 멀티 스레드를 활용하지만, UI를 업데이트하는 데는 <b>단일 스레드 모델 (single thread model)</b>이 적용된다. UI 자원은 어떤 스레이드에서도 동일하기 때문에 멀티 스레드로 업데이트를 하면 `Deadlock`, `Race Condition` 등 여러 문제를 야기할 수 있기 때문이다. 따라서 UI 업데이트는 메인 스레이드에서만 혀용된다.  
+안드로이드 어플리케이션은 CPU의 성능을 최대한 끌어올리기 위해 멀티 스레드를 활용하지만, UI를 업데이트하는 데는 <b>단일 스레드 모델 (single thread model)</b>이 적용된다. UI 자원은 어떤 스레이드에서도 동일하기 때문에 멀티 스레드로 업데이트를 하면 `Deadlock`, `Race Condition` 등 여러 문제를 야기할 수 있기 때문이다. 따라서 UI 업데이트는 메인 스레이드에서만 허용된다.  
 
-## 안드로이드에서의 메인 스레드
+## 1-1. 안드로이드에서의 메인 스레드
 
-일반적인 자바 어플리케이션에서 main() 메서드로 실행되는 것이 바로 메인 스레드이다. 안드로이드 어플리케이션에서의 메인 스레드도 동일하다. 안드로이드 프레임워크 내부 클래스인 `android.app.ActivityThread`가 어플리케이션의 메인 클래스라고 할 수 있고 `ActivityThread#main()` 메서드가 어플리케이션의 시작 지점이다. 해당 클래스의 이름만 보면 액티비티 관련 클래스 같지만 모든 컴포넌트들과 관련이 있는 클래스이다.  
+일반적인 자바 어플리케이션에서 `main()` 메서드로 실행되는 것이 바로 메인 스레드이다. 안드로이드 어플리케이션에서의 메인 스레드도 동일하다. 안드로이드 프레임워크 내부 클래스인 `android.app.ActivityThread`가 어플리케이션의 메인 클래스라고 할 수 있고 `ActivityThread#main()` 메서드가 어플리케이션의 시작 지점이다. 해당 클래스의 이름만 보면 액티비티 관련 클래스 같지만 모든 컴포넌트들과 관련이 있는 클래스이다.  
 
 ```java
 public static void main(String[] args) {
@@ -57,11 +57,11 @@ public static void main(String[] args) {
 ```  
 <br>
 
-# Looper 클래스
+# 2. Looper 클래스
 
 메인 스레드의 동작을 이해하기 위해서 `Looper`를 먼저 이해해보자.  
 
-## 생성
+## 2-1. 생성
 
 `Looper`는 *TLS(thread local sorage)에 저장되고 꺼내어진다. 접근하는 스레드에 따라 저장하는 위치와 반환하는 데이터가 다르다.
 
@@ -126,14 +126,14 @@ public final class Looper {
 ```  
 
 
-## MessageQueue
+## 2-2. MessageQueue
 
 Looper는 각각의 `MessageQueue`를 가진다. 특이 메인 스레드에서는 이 `MessageQueue`를 통해서 UI 작업에서 `Race Condition`을 해결한다. 안드로이드 개발 중에 문제 해결을 위해 스레드 별로 다른 큐 구조가 필요하다면 직접 구현하는 방법도 있지만 `Looper`를 사용해 더욱 단순히 구현할 수도 있다.  
 
 <img src="https://user-images.githubusercontent.com/57310034/103733505-3f426b80-502d-11eb-9a45-4524820b6b9c.png"/>  
 
 
-## Looper.loop()
+## 2-3. Looper.loop()
 
 Looper는 그 이름도 그렇듯이 기본적으로 무한히 반복하며 메시지를 처리한다. 이 무한 반복을 시작하기 위해 `Looper.loop()` 메서드를 사용한다.  
 
@@ -177,11 +177,11 @@ public void quitSafely() {
 ```  
 <br>
 
-# Message와 MessageQueue
+# 3. Message와 MessageQueue
 
 `MessageQueue`는 `Message`를 담는 FIFO 자료구조이다. MssageQueue의 구조는 다음 노드의 주소 값을 변수로 갖고 있는 `LinkedBlockingQueue`와 유사하다. 따라서 일반적으로 개수 제한이 없고 삽입/삭제가 빠르다.  
 
-## Message Class
+## 3-1. Message Class
 
 ```java
 public final class Message implements Parcelable {
@@ -225,7 +225,7 @@ public final class Message implements Parcelable {
 
 `postxxx()`, `sendxxx()`메서드에서 실행 시간을 `public long when` 변수에 담아 이미 큐에 존재하는 Message 보다 타임스탬프가 빠르면 큐 중간에 삽입된다. 삽입이 빠른  `MessageQueue`의 링크 구조는 이런 상황에 상당히 유리하다.  
 
-## obtain() 메서드를 통한 Message 생성
+## 3-2. obtain() 메서드를 통한 Message 생성
 
 Message를 생성하기 위한 방법은 다음과 같다.
 
@@ -287,11 +287,12 @@ void recycleUnchecked() {
 `Looper#loop()` 메서드에서 Message를 처리하면 `recycleUnChecked()`를 통해 Message를 초기화해서 풀에 추가한다. 위 코드를 보면 `new Message()`를 사용해서 Message를 생성해도 재활용이 되긴하나, 풀이 금방 찰 것이다. 따라서 `Message#obtain()`를 활용하는 것이 좋다.  
 <br>
 
-# Handler
+# 4. Handler
 
 `Handler`는 Message를 MessageQueue에 넣거나 꺼내어 처리하는 기능을 모두 제공한다. Handler가 Looper, MessageQueue와 어떤 관계가 있는지 살펴보자.  
+<br>
 
-## 생성자
+## 4-1. 생성자
 
 - `Handler()` //deprecated
 - `Handler(Handler.Callback callback)` //deprecated
@@ -304,7 +305,7 @@ Looper를 파라미터로 명시하지 않은 생성자는 생성자를 호출�
 
 `Handler.Callback` 파라미터는 메시지를 처리할 콜백을 구현한 인스턴스를 필요로 한다. 생략하면 null이 된다.  
 
-## 동작
+## 4-2. 동작
 
 앞서 말했듯이 Handler는 Message를 MessageQueue에 보내는 것과 처리하는 것를 모두 제공한다 (send). 그리고 대상 스레드에서 실행하고싶은 코드를 전달만 하는 기능도 함께 제공한다. 이는 `Runnable` 객체를 통해 구현할 수 있다. (post)
 
@@ -359,7 +360,7 @@ Handler는 두 가지 콜백을 가지고 있다. 하나는 메시지를 어떻�
 
 Handler가 가지고 있는 Handler.Callback은 해당 Hendler가 처리할 Message에 모두 사용된다. 하지만 Message가 Runnable을 갖고 있는 경우, 이는 Message를 처리하기 위함이 아니라 해당 스레드에서 실행할 코드를 `post`한 것임으로 Handler.Callback이 아닌 Runnable이 우선 실행된다.  
 
-## 용도
+## 4-3. 용도
 
 ### 백그라운드 스레드에서의 UI 업데이트
 
@@ -412,7 +413,7 @@ Handler를 상속한 `ViewRootImpl` 클래스에서 터치나 그리기(invalida
 
 액티비티는 멤버 변수로 Handler를 가지고 있다. 액티비티 스코프 내에서 Ui 업데이트를 위해 `runOnUiThread()` 메서드를 Runnable과 함께 호출하면, 호출한 스레드가 메인 스레드라면 바로 실행, 아니라면 메인 Looper에 post한다.
 
-## Handler의 타이밍 이슈
+## 4-4. Handler의 타이밍 이슈
 
 개발을 하다보면 원하는 동작 시점과 실제 동작 시점에서 차이가 나 곤란한 상황이 분명 생긴다. 필요한 자원이 아직 초기화되지 않아 NPE를 발생시키는 경우도 있다. 이때 Handler를 사용하면 꽤 단순히 해결할 수 있다.  
 
