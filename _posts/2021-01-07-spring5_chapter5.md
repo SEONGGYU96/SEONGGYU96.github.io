@@ -122,6 +122,3 @@ public class AppContext {
 
 --- 
 해당 포스팅은 [초보 웹 개발자를 위한 스프링5 프로그래밍 입문 - 최범균 저](https://www.aladin.co.kr/shop/wproduct.aspx?ItemId=157472828)를 정리하며 작성하였습니다.
-
-참고 :  
-[https://engkimbs.tistory.com/683](https://engkimbs.tistory.com/683)
