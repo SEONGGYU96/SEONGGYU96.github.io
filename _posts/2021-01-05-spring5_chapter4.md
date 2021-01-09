@@ -320,7 +320,7 @@ public class AppContext {
     }
 
     @Bean
-    @Qualifier("memberDao")
+    @Qualifier("cachedMemberDao")
     public CachedMemberDao memberDao2() {
         return new CachedMemberDao();
     }
