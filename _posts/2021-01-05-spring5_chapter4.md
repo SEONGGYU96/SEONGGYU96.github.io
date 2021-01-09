@@ -250,7 +250,7 @@ public class MemberPrinter {
     }
 
     @Autowired(requierd = false) 
-    //DateTimeFormater 타입의 빈 객체가 존재하지 않으면 null로 초기화
+    //DateTimeFormater 타입의 빈 객체가 존재하지 않으면 실행하지 않음
     public void setDateFormatter(DateTimeFormmater dateTimeFormatter) {
         this.dateTimeFormatter = dateTimeFormatter;
     }
@@ -302,6 +302,16 @@ public class MemberPrinter {
 
 그런데 만약 의존 자동 주입 대상을 설정 클래스에서 직접 주입하게되면 어떻게 될까? 이 경우, 자동 주입을 통해 일치하는 빈을 주입한다. 아래 예제에서는 세터 메서드를 통해 `memberDao1`을 명시적으로 주입하였으나, `@Autowired`로 인해 자동으로 `memberDao`가 주입된다.
 ```java
+public class ChangePasswordService {
+    ...
+    @Autowired
+    @Qualifier("cachedMemberDao") // "cachedMemberDao" 한정자를 가진 빈 객체 자동 주입 대상
+    public void setMemberDao(MemberDao memberDao) {
+        this.memberDao = memberDao;
+    }
+    ...
+}
+
 public class AppContext {
     ...
     @Bean
@@ -324,16 +334,6 @@ public class AppContext {
     }
     ...
 }
-
-public class ChangePasswordService {
-    ...
-    @Autowired
-    @Qualifier("memberDao") // "memberDao" 한정자를 가진 빈 객체 자동 주입 대상
-    public void setMemberDao(MemberDao memberDao) {
-        this.memberDao = memberDao;
-    }
-    ...
-}
 ```  
 
 
@@ -349,3 +349,5 @@ public class ChangePasswordService {
 
 참고 :  
 [https://engkimbs.tistory.com/683](https://engkimbs.tistory.com/683)
+
+[https://galid1.tistory.com/512])https://galid1.tistory.com/512)

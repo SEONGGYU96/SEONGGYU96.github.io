@@ -74,7 +74,7 @@ public class AppContext {
 }
 ```
 
-`excludeFilters` 속성은 `@Filter`을 값으로 갖고 있는데 `@Filter`는 또 `type` 속성과 `pattern` 속성을 갖고 있다.
+`excludeFilters` 속성은 `@Filter`을 값으로 갖고 있는데 `@Filter`는 또 `type` 속성 등을 가지고 있다.
 
 - FilterType.REGEX : 정규표현식을 사용해서 제외 대상 지정
     - `@Filter(type = FilterType.REGEX, pattern = "spring\\..*Dao")`
@@ -113,8 +113,6 @@ public class AppContext {
 ### 수동 등록한 빈과 충돌
 
 `@Component` 어노테이션을 사용한 클래스를 설정 클래스에서 `@Bean`을 사용하여 수동으로 빈을 등록하면 어떻게 될까? 스캔할 때 사용하는 빈 이름과 수동으로 등록한 빈의 이름이 같다면 수동으로 등록한 빈을 우선 등록한다. 스캔으로 찾은 같은 이름의 빈은 등록되지 않는다.
-
-이름이 다른 경우에는 동일한 클래스라 하더라도 각각의 빈이 등록되며, 자동 주입을 사용할 경우에는 `@Qualifier`를 통해 알맞은 빈을 선택해야한다.
 
 <br>
 <br>
