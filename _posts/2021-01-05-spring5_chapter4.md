@@ -19,26 +19,9 @@ tags:
 
 # @Autowired를 이용한 의존 자동 주입
 
-## 맴버 변수
+## Field Injection
 
-의존 자동 주입 기능을 사용하면 스프링이 알아서 의존 객체를 찾아서 주입한다. 즉, 설정 클래스에 의존 객체를 명시적으로 주입하지 않아도 된다는 것이다.  
-
-```java
-@Bean
-public MemberDao memberDao() {
-    return new MemberDao();
-}
-
-@Bean
-publick ChangePasswordService changePasswordService() {
-    ChangePasswordService passwordService = new ChangePasswordService();
-    //passwordService.setMemberDao(memberDao()); 직접 주입하지 않아도 스프링이 찾아 넣어줄 것이다.
-    return passwordService
-}
-```  
-<br>
-
-자동 주입 기능을 사용하려면 의존을 주입할 대상에 `@Autowired` 어노테이션을 붙이기만 하면 된다.  
+의존 객체를 참조할 필드에 `@Autowired` 어노테이션을 붙여주면 스프링이 알아서 의존 객체를 찾아서 주입한다. 즉, 설정 클래스에 의존 객체를 명시적으로 주입하지 않아도 된다는 것이다.  
 
 ```java
 public class ChangePasswordService {
@@ -50,12 +33,28 @@ public class ChangePasswordService {
     }
     ...
 }
+
+@Configuration
+public class AppContext {
+    @Bean
+    public MemberDao memberDao() {
+        return new MemberDao();
+    }
+
+    @Bean
+    publick ChangePasswordService changePasswordService() {
+        ChangePasswordService passwordService = new ChangePasswordService();
+        //passwordService.setMemberDao(memberDao()); 직접 주입하지 않아도 스프링이 찾아 넣어줄 것이다.
+        return passwordService
+    }
+    ...
+}
 ```  
 <br>
 
-## 세터 메서드
+## Setter Injection
 
-`@Autowired` 어노테이션은 세터 메서드에도 붙일 수 있다. 결과는 동일하다.  
+`@Autowired` 어노테이션을 세터 메서드에 붙여 의존 자동 주입을 할 수 있다. 결과는 동일하다.  
 
 ```java
 public class ChangePasswordService {
@@ -69,6 +68,82 @@ public class ChangePasswordService {
     ...
 }
 ```
+
+## Constructor Injection
+
+`@Autowired` 어노테이션을 생성자에 붙여 의존 자동 주입을 한다. 단일 생성자인 경우에는 `@Autowired` 어노테이션을 생략해도 된다.
+
+```java
+public class ChangePasswordService {
+    
+    private MemberDao memberDao;
+
+    //@Autowired 어노테이션을 붙여도 되고 생략해도 된다.
+    public hangePasswordService(MemberDao memberDao) {
+        this.memberDao = memberDao;
+    }
+    ...
+}
+```
+
+하지만 사실 생성자에 `@Autowired`를 사용하면 설정 클래스에서 빈 설정 시, 의존 객체를 명시해서 적어주어야 하기 때문에 큰 체감이 없다. 즉 `@Autowired`를 붙이나 붙이지 않으나 결과가 동일하다.
+
+```java
+public class AppContext {
+    ...
+    @Bean
+    public MemberDao memberDao() {
+        return new MemberDao();
+    }
+
+    @Bean
+    public ChangePasswordService changePasswordService() {
+        return new ChangePasswordService(memberDao());
+    }
+}
+```
+
+하지만 컴포넌트 스캔을 함께 사용하면 `@Autowired`는 아주 큰 시너지를 낼 수 있다.  
+
+```java
+@Component //자동 빈 등록
+public class MemberDao {
+    ...
+}
+
+@Component //자동 빈 등록
+public class ChangePasswordService {
+    
+    private MemberDao memberDao;
+
+    @Autowired
+    public hangePasswordService(MemberDao memberDao) {
+        this.memberDao = memberDao;
+    }
+    ...
+}
+
+@Configuration
+@ComponentScan
+public class AppContext {
+    //빈 설정 클래스를 작성하지 않아도 됨
+}
+
+public class Main {
+
+    public static void main(String[] args) throws IOException {
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppContext.class);
+
+        //정상 작동
+        context.getBean("changePasswordService", ChangePasswordService.class) 
+        ...
+    }
+}
+```
+
+## 차이점과 권장 방법
+
+위 세 가지 의존 자동 주입 방법 중, 생성자 주입 방식을 권장하고 있다. 필드 주입 방식과 세터 메서드 주입 방식은 의존 객체를 주입하지 않아도 빈 객체 생성은 가능하기 때문에 NPE등 여러가지 문제점에 취약하고, 무엇보다 순환 참조 여부를 비즈니스 로직 실행 전까지는 알 수 없다. 하지만 생성자 주입 방식은 빈 생성 과정에서 의존 객체를 주입하기 때문에 순환 참조 여부를 바로 알 수 있어 디버깅에 유리하다. 또한 테스트도 생성자 주입 방식이 용이하다고 하여 스프링 4.3 부터는 생성자 주입 방식을 "항상" 권장하고 있다.  
 
 ## 에러
 
