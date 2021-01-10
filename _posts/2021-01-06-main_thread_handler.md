@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "메인 스레드와 Handler"
-subtitle: "UI 이벤트와 사용자 메시지 처리"
+title: "안드로이드 메인 스레드와 Handler"
+subtitle: "메인 스레드와 Handler의 상호작용"
 author: "GuGyu"
 header-style: text
 tags:
@@ -12,7 +12,7 @@ tags:
   - Handler
 ---
 
-`Handler`는 메인 `Looper`와 연결되어 메인 스레드에서 `Message`를 처리하는 중심 역할을 한다. 이번 포스팅에서는 메인 스레드와 `Handler`에 대해 조금 깊게 다뤄보고자 한다.  
+`Handler`는 메인 `Looper`와 연결되어 메인 스레드에서 `Message`를 처리하는 중심 역할을 한다. 백그라운드에서도 물론 특별한 용도로 사용 가능하지만 이번 포스팅에서는 메인 스레드와 `Handler`에 대해 조금 깊게 다뤄보고자 한다.  
 
 <br>
 
@@ -299,7 +299,7 @@ void recycleUnchecked() {
 - `Handler(Looper looper)`
 - `Handler(Looper looper, Handler.Callback callback)`
 
-안드로이드 프레임워크 코드를 몇 번 뜯어본 사람이라면 바로 알겠지만 1~3번째 생성자는 4번째 생성자를 다시 생성한다. ([`Telescoping Constructor Pattern`](http://www.javabyexamples.com/telescoping-constructor-in-java)) 즉 Handler는 Looper(결국엔 MessageQueue)와 연결되어 있다는 것이다.  
+안드로이드 프레임워크 코드를 몇 번 뜯어본 사람이라면 바로 알겠지만 1~3번째 생성자는 4번째 생성자를 다시 호출한다. ([Telescoping Constructor Pattern](http://www.javabyexamples.com/telescoping-constructor-in-java)) 즉 Handler는 Looper(결국엔 MessageQueue)와 연결되어 있다는 것이다.  
 
 Looper를 파라미터로 명시하지 않은 생성자는 생성자를 호출하는 스레드의 Looper를 사용한다. 따라서 메인 스레드에서 사용할 경우 `ActivityThread`에서 생성한 메인 Looper를 사용하기 때문에 UI작업을 할 때 많이 사용했다. 하지만 작업 손실, 스레드 참조 실패, 관련된 스레드와의 `Race Condetion` 등의 위험이 있어 deprecated 되었다. UI 작업을 위해 `getMainLooper()`를 사용하거나 `Loop#myLooper()`를 사용해 Looper를 명시해주어야 한다.
 
