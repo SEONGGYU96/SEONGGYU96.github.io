@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Spring5 : Bean 라이프사이클과 범위"
-subtitle: "Spring5 study (5)"
+subtitle: "Spring5 study (6)"
 author: "GuGyu"
 header-style: text
 tags:

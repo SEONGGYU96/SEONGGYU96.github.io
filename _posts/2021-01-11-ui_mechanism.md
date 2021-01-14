@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "메인 스레드와 Handler (2)"
+title: "안드로이드 메인 스레드와 Handler (2)"
 subtitle: "UI 변경 메커니즘과 ANR"
 author: "GuGyu"
 header-style: text
