@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Spring5 : AOP 프로그래밍 (1)"
+title: "Spring5 : AOP 프로그래밍"
 subtitle: "Spring5 study (7)"
 author: "GuGyu"
 header-style: text
