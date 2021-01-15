@@ -14,11 +14,13 @@ tags:
   - Background
 ---
 
-메인 스레드는 UI를 그리는데 사용되기 때문에, 이 외의 작업은 백그라운드에서 수행하여 성능을 향상시킬 수 있다. 백그라운드 스레드를 활용할 수 있는 방법을에 대해 간단히 알아보고자 한다.
+메인 스레드는 UI를 그리는데 사용되기 때문에, 이 외의 작업은 백그라운드에서 수행하여 성능을 향상시킬 수 있다. HandlerThread 를 사용하여 백그라운드 스레드를 활용할 수 있는 방법에 대해 간단히 알아보고자 한다.
 
 ## HandlerThread 클래스
 
 `HandlerThread`는 `Thread`를 상속하고, 내부에서 `Looper.prepare()`와 `Looper.loop()`를 실행하는 Looper 스레드이다. 이름만 보면 Handler를 사용할 것 같지만 그렇지 않고, Looper를 가지고 있으며 Handler에서 사용하기 위한 스레드이다. 여기에서 만든 Looper를 Handler의 생성자(`Handler(Looper looper)`)로 넘겨 연결할 수 있다.  
+
+HandlerThread를 사용하지 않았을 때의 코드를 살펴보자.  
 <br>
 
 ```java
@@ -66,6 +68,8 @@ public void process() {
     });
 }
 ```  
+
+위 처럼 HandlerThread는 별도 백그라운드에서 계속 돌아가고 있고, 메인 스레드에서 Handler를 생성해 HandlerThread로 메시지 처리를 요청할 수 있다.
 <br>
 
 ### HandlerThread 프레임워크 소스
@@ -123,7 +127,7 @@ public class HandlerThread extends Thread {
     ...
 }
 ```
-위 코드를 보면 `run()` 내에서 `Looper.prepare()` 이후 Looper 객체를 `mLooper`에 저장하는 것을 볼 수 있다. 이는 이후로 `getLooper()` 메서드를 통해 외부에서나 내부에서 참조할 수 있다. 따라서 스레드 외부에 있던 Handler의 생성자에도 사용할 수 있ㅇ었던 것이다.  
+위 코드를 보면 `run()` 내에서 `Looper.prepare()` 이후 Looper 객체를 `mLooper`에 저장하는 것을 볼 수 있다. 이는 이후로 `getLooper()` 메서드를 통해 외부에서나 내부에서 참조할 수 있다. 따라서 스레드 외부에 있던 Handler의 생성자에도 사용할 수 있었던 것이다.  
 
 그런데 내부에서는 왜 직접 `mLooper`에 접근하지 않고 `getLooper()`를 거칠까? `getLooper()`는 단순히 `mLooper`를 리턴하는데 그치지 않고 여러가지 검사를 한다. 우선은 Thread에서 `start()`를 호출하였는지 검사하고, 호출되지 않았다면 null을 반환한다. 그런데 `start()`가 호출되었다고 해서 바로 `run()`이 실행되는 것은 아니다. 따라서 while 문을 사용해 mLooper가 null인지를 계속해서 체크하며 대기한다. mLooper가 초기화되고 나서야 반복문을 빠져나와 mLooper를 반환한다.  
 
