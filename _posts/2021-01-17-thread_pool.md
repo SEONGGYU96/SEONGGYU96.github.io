@@ -20,7 +20,13 @@ tags:
 자바에서는 스레드 풀이 `ThreadPoolExecutor` 클래스로 구현되어있다. 이 클래스의 한 생성자를 살펴보자. (`ThreadFactory`는 제외하였다)
 
 ```java
-ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler)
+ThreadPoolExecutor(
+    int corePoolSize,
+    int maximumPoolSize,
+    long keepAliveTime,
+    TimeUnit unit,
+    BlockingQueue<Runnable> workQueue, RejectedExecutionHandler handler
+)
 ```
 
 ### corePoolSize와 maximumPoolSize 파라미터
@@ -159,7 +165,7 @@ Executors에서 리턴하는 `ExecutorService`, `ScheduledExecutorService`는 �
 
 Executors에서 자주 쓰이는 팩토리 메서드는 다음과 같다.
 
-#### `newFixedThreadPool(int nThreads)
+#### `newFixedThreadPool(int nThreads)`
 
 workQueue의 크기 제한 없이, nThreads 개수까지 스레드를 생성한다.
 
