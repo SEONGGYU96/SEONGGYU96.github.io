@@ -380,6 +380,7 @@ public class AppContext {
 		dataSource.setTimeBetweenEvictionRunsMillis(10 * 1000);
 		return dataSource;
 	}
+}
 ```
 
 위 설정은 커넥션 풀 생성 시 최초 2개의 커넥션을 미리 생성해두고, 최대 10개의 커넥션을 수용할 수 있도록 한 것이다. 그리고 10초마다 Idle 상태의 커넥션 (풀에 반환되어 있는 커넥션)을 검사하여 커넥션이 끊어졌는지 확인한다. 이때 3분 이상 Idle 상태인 커넥션을 발견하면 커넥션 풀에서 제거한다. DBMS에서 특정 시간 이상 쿼리를 실행하지 않으면 연결이 끊어지도록 설정할 수 있기 때문이다.  
