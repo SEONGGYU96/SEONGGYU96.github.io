@@ -18,7 +18,7 @@ tags:
 
 ## DB 연동 과정에서 발생 가능한 Exception
 
-DB 연동 과정에서는 다양한 Exception이 발생한다. 연결 정보가 옳바르지 않아서 발생하기도 하고 DB가 실행되지 않았거나, 방화벽에 막혀 연결이 불가능한 경우에도 발생한다. 그리고 물론 쿼리를 잘못 사용했을 때도 비번하게 발생한다.
+DB 연동 과정에서는 다양한 Exception이 발생한다. 연결 정보가 올바르지 않아서 발생하기도 하고 DB가 실행되지 않았거나, 방화벽에 막혀 연결이 불가능한 경우에도 발생한다. 그리고 물론 쿼리를 잘못 사용했을 때도 비번하게 발생한다.
 
 - `CannotGetJdbcConnectionException`
 - `BadSqlGrammerException`
