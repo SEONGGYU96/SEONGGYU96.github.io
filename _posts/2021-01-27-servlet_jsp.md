@@ -12,7 +12,7 @@ tags:
   - Server
 ---
 
-## Servelt 이란?
+## servlet 이란?
 
 서블릿은 자바를 이용해 웹 어플리케이션을 개발할 때 사용할 수 있는 자바 프로그램이다. 웹 서버가 동적인 데이터 처리를 웹 어플리케이션 서버에게 요청을 하면 이를 처리해 반환하는 역할을 담당한다. 따라서 서블릿은 자바로 구현된 [CGI](https://seonggyu96.github.io/2021/01/27/common_gateway_interface/)라고도 한다. 각각의 서블릿 클래스들은 미리 정의된 요청과 매핑되어 이를 처리한다.
 
@@ -29,7 +29,7 @@ tags:
 
 ### Servlet 의 구현
 
-서블릿을 구현하기 위해서 프로그래머는 `HttpServelt` 클래스를 상속하여야 한다. 해당 클래스에는 클라이언트의 요청에 대해 해당 서블릿을 실행하는 조건들이 포함되어있다.
+서블릿을 구현하기 위해서 프로그래머는 `Httpservlet` 클래스를 상속하여야 한다. 해당 클래스에는 클라이언트의 요청에 대해 해당 서블릿을 실행하는 조건들이 포함되어있다.
 
 <img src="https://user-images.githubusercontent.com/57310034/105981428-68f52c80-60d9-11eb-9765-531a3c5bf701.png"/>  
 
@@ -70,7 +70,7 @@ tags:
 
 1. 사용자가 URL을 통한 HTTP Request를 보내면, 웹 서버는 정적 데이터 요청인지 동적 데이터 요청인지 판단한다. 정적 데이터 요청이라면 웹 서버에 저장된 데이터를 반환한다.
 2. 사용자가 동적 데이터 요청을 보냈다면 웹 서버는 해당 요청을 웹 어플리케이션 서버의 서블릿 컨테이너(`SevletContainer`)에 포워딩한다.
-3. 서블릿 컨테이너는 해당 요청에 대한 `HttpServeltRequest` 객체와 `HttpServletResponse` 객체를 생성한다.
+3. 서블릿 컨테이너는 해당 요청에 대한 `HttpservletRequest` 객체와 `HttpServletResponse` 객체를 생성한다.
 4. 이후 서블릿 컨테이너는 해당 요청을 어떤 서블릿 클래스에서 이 요청을 처리해야할지 찾는다.
 5. 이전에 실행된 적 없는 서블릿이라면 해당 서블릿의 인스턴스를 생성하고 `init()` 메서드를 통해 초기화하여 메모리에 로드 시킨다. 실행된 적이 있다면 새로 인스턴스를 생성하지 않고 메모리에 로드 된 인스턴스를 사용한다.
 6. 요청을 처리하기 위해 스레드 풀에서 스레드드를 하나 가져온다.
@@ -242,4 +242,6 @@ JSP는 JSP의 장점을 최대한 활용하기 위해 웹 어플리케이션 구
 [https://mangkyu.tistory.com/14](https://mangkyu.tistory.com/14)  
 [https://galid1.tistory.com/487](https://galid1.tistory.com/487)  
 [https://codevang.tistory.com/191](https://codevang.tistory.com/191)  
+[https://m.blog.naver.com/acornedu/221128616501](https://m.blog.naver.com/acornedu/221128616501)
+[https://webfirewood.tistory.com/38](https://webfirewood.tistory.com/38)
 [https://m.blog.naver.com/acornedu/221128616501](https://m.blog.naver.com/acornedu/221128616501)
