@@ -11,9 +11,7 @@ tags:
   - Study
   - Server
   - MVC
-  - RequstMapping
-  - Redirection
-  - FormTag
+  - Validator
 ---
 
 [Spring5: MVC 프로그래밍 (2)](https://seonggyu96.github.io/2021/02/03/spring5_chapter11/)  
