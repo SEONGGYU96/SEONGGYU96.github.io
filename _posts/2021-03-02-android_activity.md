@@ -31,7 +31,7 @@ tags:
 
 ### 액티비티 생명주기 다이어그램 
 
-<img src="https://developer.android.com/guide/components/images/activity_lifecycle.png?hl=ko/>  
+<img src="https://developer.android.com/guide/components/images/activity_lifecycle.png?hl=ko/">  
 [출처 - 안드로이드 공식 문서](https://developer.android.com/guide/components/activities/activity-lifecycle?hl=ko#alc)
 
 위 그림은 액티비티 생명주기를 설명하는 가장 기본적인 그림이다. `onCreate()` 부터 `onDestroy()` 까지 아래로 향하는 화살표의 흐름은 시간의 경과에 따른 것이다. 물론 상황에 따라 `onPause()`나 `onStop()`에서 위로 거슬러 올라가는 흐름도 있으니 하나씩 따져보자.  
@@ -244,7 +244,7 @@ fontScale과 locale은 단말의 환경 설정에서 정할 수 있는 사용자
 
 구성이 변경되면 `system_server`에서 동작하는 `ActivityManagerService`에서 앱 프로세스의 메인 클래스인 `ActivityThread`에 새로운 `Configuration`을 전달한다. 결과적으로 하는 일은 `AssertManager`의 네이티브 메서드(C로 작성된)인 `setConfiguration()`을 실행하는 것이다. 해당 네이티브에서는 리소스 테이블을 유지하고 있는데, 현재 `Configuration`에 맞는 리소스를 선택해서 가져온다.  
 
-<img src="https://developer.android.com/images/resources/res-selection-flowchart.png/>
+<img src="https://developer.android.com/images/resources/res-selection-flowchart.png/">
 
 리소스 선택 로직은 내부적으로 최적화되어 있다. 예를 들어 현재 사용 가능한 리소스는 다음과 같다고 하자.  
 
