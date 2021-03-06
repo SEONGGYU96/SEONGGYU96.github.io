@@ -19,8 +19,6 @@ tags:
 
 태스크는 간단하게 액티비티 작업 묶음 단위라고 보면 된다. 태스크의 예를 들어보자면 사진 리스트를 보고(PictureListActivity), 사진 상세를 살펴보고(PictureDetailActivity), 사진을 올리려고 카메라를 실행시킨다(별도 앱의 CameraActivity). 이러면 3개의 액티비티가 하나의 태스크가 되는데 여기서는 2개의 앱이 하나의 태스크가 된 경우이기도 하다. 즉 앱과 태스크는 일대일 대응이 아니라는 것을 염두에 두자. 여러 개의 앱이 하나의 태스크가 될 수도 있고, 하나의 앱에서도 태스크를 여러개 가지고 있을 수도 있다.  
 
-<br>
-
 ### 백 스택  
 
 액티비티는 백 스택(back stack)이라 불리는 스택에 차례대로 쌓인다. 태스크와 백 스택은 용어를 혼용해서 사용하기도 하는데 태스크는 액티비티의 모임이고 백 스택은 그 모임이 저장된 방식을 의미하는 것으로 이해하면 쉽다.  
@@ -143,7 +141,9 @@ TaskRecord 섹션은 하나의 태스크를 이루고 태스크의 다양한 정
 
 `adb shell dumpsys activity a | grep mFocusedActivity` 를 터미널에 입력해보자.  
 
-### taskAffinity 속성  
+<br>
+
+## taskAffinity 속성  
 
 위에서 `dumpsys` 명령어를 통해서 태스크 목록을 살펴보았다. 액티비티가 시작되면 특정 TaskRecord의 특정 ActivityRecord에 소속된다. 여기서 어디에 소속될지 결정하는 기준 중 한 가지가 바로 taskAffinity 문자열 속성이다. taskAffinity 속성은 단어 뜻으로 해석해보면 액티비티가 '관련된' 태스크에 들어갈 때 참고하는 값이라고 볼 수 있다.  
 
@@ -152,17 +152,13 @@ taskAffinity와 비슷한 속성으로 TaskRecord의 affinity가 있다. 이 둘
 - taskAffinity : ActivityRecord에 속해있으며 AndroidManifest.xml의 액티비티 설정에 들어가는 값이다. `android:taskAffinity`로 설정할 수 있는데 기본값은 앱의 패키지명이다.  
 - affinity : TaskRecord에 속해있으며 태스크를 시작한 액티비티의 taskAffinity 속성이다.
 
-<br>
-
-#### 사용 시기  
+### 사용 시기  
 
 액티비티를 시작하면 태스크에 들어가는 기준으로 taskAffinity 속성은 언제 사용하게 될까? 바로 AndroidManifest.xml의 액티비티 설정에서 `android:launchMode`에 `singleTask`를 지정하거나, 액티비티를 시작하는 `Intent`에 `FLAG_ACTIVITY_NEW_TASK` 플래그를 전달하는 경우에 사용된다. 이 두 가지 경우에 액티비티가 시작되면서 TaskRecord의 affinity가 액티비티의 taskActivity와 동일한 것을 찾아 그 태스크에 액티비티가 속하게 된다.
 
 `singleTask` 속성 값이나 `FLAG_ACTIVITY_NEW_TASK` 플래그는 이름만 봤을 때 새로운 태스크를 생성하여 액티비티를 실행하는 것으로 이해하기 쉽다. 하지만 새로운 태스크를 생성하는 것은 기본 옵션이 아니라 부가 옵션으로 봐야한다. 이 경우, 시작하려는 액티비티의 taskAffinity에 따라서 결과가 달라진다. TaskRecord의 affinity가 실행하려는 taskAffinity와 동일한 게 있다면, 그 태스크에 액티비티가 포함되고, 그렇지 않다면 새로운 태스크가 시작된다. (새로 시작된 태스크의 affinity는 실행된 액티비티의 taskAffinity가 될 것이다.) 따라서 조금 더 명확하게 플래그 이름을 수정하자면 `FLAG_BELONG_OR_NEW_TASK`로 수정할 수 있을 것이다.  
 
-<br>
-
-#### 액티비티 외의 컴포넌트에서의 액티비티 시작  
+### 액티비티 외의 컴포넌트에서의 액티비티 시작  
 
 Activity에서 `startActivity()`를 실행하는 게 일반적이지만, BroadcastReceiver나 Service에서 `startActivity()`를 실행하기도 한다. 드물지만 Application에서 startActivity()를 실행하는 경우도 있다. Activity에서 `startActivity()`를 실행할 때 특별한 옵션이 없다면 피호출자는 호출자와 동일한 태스크에 올라가면 된다. 하지만 다른 컴포넌트에서 `startActivity()`를 실행하면 어느 태스크에 올라가야할까?  
 
@@ -180,9 +176,7 @@ context.startActivity(intent);
 
 그럼 앞서 설명한대로, `MainActivity`의 taskAffinity와 동일한 affinity를 가진 태스크가 있다면 그 태스크 위에 올라가고, 그런 태스크가 없다면 새로운 태스크를 생성하여 실행되고 새로 생성한 태스크의 baseActivity가 된다.  
 
-<br>
-
-#### 속성 지정  
+### 속성 지정  
 
 앞에서 언급했듯이 taskAffinity는 AndroidManifest.xml의 액티비티 선언에 `android:taskAffinity`로 지정할 수 있고, 속성이 없다면 디폴트 값은 패키지명이다. 결국 해당 속성을 선언하지 않은 것 끼리는 `FLAG_ACTIVITY_NEW_TASK` 속성을 쓰더라도 같은 태스크에 있게 된다. taskAffinity 속성을 지정할 때는 `android:taskAffinity`에 ':alarm'과 같이 콜론(:) 뒤에 구분자를 적는 것이 권장된다. 그러나 taskAffinity는 보통은 쓰지 않는 속성이다. 해당 속성을 별도로 지정하는 경우는 어떤 게 있을까? 
 
@@ -194,7 +188,7 @@ context.startActivity(intent);
 
 <br>
 
-### 태스크 속성 부여  
+## 태스크 속성 부여  
 
 액티비티에 태스크 속성을 전혀 부여하지 않고서는 원하는 내비게이션을 만들기 어렵다. 동일한 액티비티라도 새로운 인스턴스로 계속 쌓이기 때문이다.  
 
@@ -202,25 +196,18 @@ context.startActivity(intent);
 
 <br>
 
-#### android:launchMode  
+### android:launchMode  
 
 launchMode에는 standard, singleTop, singleTask, singleInstance가 있다. standard와 singleTop은 여러 인스턴스가 존재할 수 있고, singleTask와 singleInstance는 1개의 인스턴스만 존재한다. 태스크와 관련해서 가장 혼동되는 부분이 이 부분이다.  
 
-<br>
-
-**standard**  
+#### standard
 
 기본 값으로, 태스크의 topActivity에 매번 새로운 액티비티 인스터스를 생성해서 Intent를 전달한다. Activity의 `onCreate()` 메서드에서부터 `getIntent()` 메서드를 사용해서 전달된 값을 읽어들인다.  
-
-<br>
-
-**singleTop**  
+#### singleTop 
 
 호출하고자 하는 액티비티가 이미 `topActivity`에 있다면 새로 생성하지 않고, `onNewIntent()` 메서드로 Intent를 기존 인스턴스로 전달한다. topActivity에 없을 때는 standard와 동일하게 새로 생성한다. 즉 동일한 태스크에 여러 인스턴스가 존재할 수 있다.  
 
-<br>
-
-**singleTask**  
+#### singleTask
 
 태스크에 인스턴스는 1개 뿐이다. taskAffinity 값을 참고해서 들어가게 되는 태스크가 존재하고, 여기에 동일한 액티비티의 인스턴스가 이미 있다면 새로 생성하지 않고 `onNewIntent()` 메서드로 Intent를 기존 인스턴스에 전달한다. 태스크에 동일한 인스턴스가 없다면 새로 생성해 쌓는다. taskAffinity 값에 맞는 태스크가 없다면 새로운 태스크를 만들고 새로운 태스크의 baseActivity가 된다.  
 
@@ -232,9 +219,7 @@ ActivityB만 singleTask로 설정하고 ActivityA -> ActivityB -> ActivityC 순�
 
 ActivityB만 taskAffinity를 지정했기때문에 ActivityC는 ActivityA와 동일한 taskAffinity일 것이다. 그런데 왜 ActivityC는 ActivityB의 태스크에 쌓이게 되었을까? ActivityC는 standard이기 때문에 호출자의 태스크에 쌓이는 것으로 정상적인 반응이다. ActivityC를 ActivityA의 태스크에 쌓기 위해서는 ActivityC도 singleTask로 지정하거나 플래그를 사용하면 된다.  
 
-<br>
-
-**singleInstance**  
+#### singleInstance
 
 singleTask와 마찬가지로 태스크에 해당 액티비티 인스턴스가 1개뿐이며 태스크의 유일한 액티비티다. 즉 태스크에 포함된 액티비티는 이것 하나 밖에 없고 이 액티비티는 인스턴스를 하나만 가지고 사용한다는 의미이다. singleInstance로 지정된 액티비티에서 다른 액티비티를 시작하면 다른 태스크에 들어가게 되어, 새로운 태스크를 만드는 효과가 있다.  
 
@@ -250,37 +235,29 @@ singleTask와 다르게, ActivityB는 자신의 태스크에 자신의 인스턴
 
 <br>
 
-#### Intent Flag  
+### Intent Flag  
 
-Intent에는 `setFlags(int flags)` 메서드와 `addFlags(int flags)` 메서드가 있다. 여기에 전달되는 값은 `Intent` 클래스의 int 상수인 `FLAG_ACTIVITY_XXX` 값이고 비트 OR 연산(|)으로 여러 개를 전달할 수 있다.  
+Intent에는 `setFlags(int flags)` 메서드와 `addFlags(int flags)` 메서드가 있다. 여기에 전달되는 값은 `Intent` 클래스의 int 상수인 `FLAG_ACTIVITY_XXX` 값이고 비트 OR 연산(`|`)으로 여러 개를 전달할 수 있다.  
 
 Intent 플래그에 전달하는 값은 피호출자의 launchMode보다 우선해서 적용된다. 따라서 모순되는 옵션일 경우 Intent 플래그 값이 launchMode를 오버라이드 하여 결과적으로 Intent 플래그 값에 따라 액티비티가 실행된다.  
 
 `setFlag()` 메서드를 사용할 때에는 가능한 최소한의 플래그만 전달하는 것이 좋다. 최소한의 플래그로 의도를 명확히 하여야 내비게이션이 변경되어도 대응이 쉽다.  
 
-<br>
-
-**FLAG_ACTIVITY_SINGLE_TOP**  
+#### FLAG_ACTIVITY_SINGLE_TOP
 
 singleTop launchMode와 동일한 효과를 갖는다.  
 
-<br>
-
-**FLAG_ACTIVITY_CLEAR_TOP**  
+#### FLAG_ACTIVITY_CLEAR_TOP
 
 launchMode에 동일한 효과를 갖는 건 없다. 스택에서 피호출자보다 위에 있는 액티비티를 모두 종료시킨다. 스택에 [ActivityA, ActivityB, ActivityC]가 있다면 ActivityC에서 ActivityB를 시작할 때 이 플래그를 사용하면 ActivityC는 사라지고 [ActivityA, ActivityB]만 스택에 남는다. ActivityB가 standard 였다면 ActivityB도 제거한 다음 새로운 인스턴스를 생성하여 다시 `onCreate()` 부터 시작한다.  
 
 따라서 이 플래그는 `FLAG_ACTIVITY_SINGLE_TOP` 플래그와 같이 쓰이는 경우가 많은데, 이때 피호출자는 스택의 가장 위에 남아있으므로 인스턴스를 재생성하지 않고 `onNewIntent()`로 새로운 Intent를 전달한다.  
 
-<br>
-
-**FLAG_ACTIVITY_CLEAR_TASK**  
+#### FLAG_ACTIVITY_CLEAR_TASK
 
 허니콤부터 사용이 가능하다. 피호출자가 시작되기 전에 관련된 스택이 모두 제거되고, 피호출자는 빈 태스크의 baseActivity가 된다. 이 플래그는 `FLAG_ACTIVITY_NEW_TASK`와 함께 사용되어야 한다. 앱을 사용하면서 태스크에 여러 액티비티를 쌓아놓았다가, 로그아웃하고 다른 아이디로 로그인한다면 이 플래그를 사용해서 태스크를 정리하고 메인 액티비티를 새로 시작하는 게 적절하다.  
 
-<br>
-
-**FLAG_ACTIVITY_REORDER_TO_FRONT**  
+#### FLAG_ACTIVITY_REORDER_TO_FRONT
 
 스택에 동일한 액티비티가 이미 있으면 그 액티비티를 스택의 맨 위로 올린다. 해당 액티비티가 스택의 맨 위에 1개만 있어야 하는 경우에 쓸 수 있다. 하지만 주의해야할 점이 2가지 있다.  
 
@@ -289,13 +266,11 @@ launchMode에 동일한 효과를 갖는 건 없다. 스택에서 피호출자�
 
 <br>
 
-### `<activity-alias>`  
+## `<activity-alias>`  
 
 AndroidManifest.xml 에는 activity-alias 엘리먼트가 있어서 액티비티의 별명을 **지정**할 수 있다. 이 별명의 용도는 뭘까?  
 
-<br>
-
-#### 제거된 액티비티 대체  
+### 제거된 액티비티 대체  
 
 activity-alias는 기존에 있던 액티비티가 소스에서 제거될 때 사용할 수 있다. 예를 들어 SplashActivity가 맨 처음 뜨는 화면이었는데 이를 없애고 바로 MainActivity를 보여주기로 수정을 했다. 그런데 [숏컷(shortcut)](https://developer.android.com/guide/topics/ui/shortcuts)과 같이 SplashActivity에 대한 링크가 기존 버전을 설치한 단말에 남아있는 경우가 있다. 이때 기존 숏컷이 MainActivity를 바라보게 해야하는데 이때 사용하는 것이 activity-alias이다.  
 
@@ -307,9 +282,7 @@ activity-alias는 기존에 있던 액티비티가 소스에서 제거될 때 �
 
 `android:name` 속성에 반드시 존재하는 클래스명을 넣을 필요는 없다. 숏컷 외에도 `PendingIntent.getActivity()` 메서드로 알람에 등록되어 링크가 남는 경우도 있다. 대체하는 화면이 존재한다면 activity-alias로 기존 액티비티 이름을 남겨두는 것을 고려할 수 있다.  
 
-<br>
-
-#### FLAG_ACTIVITY_CLEAR_TOP 의 한계 해결  
+### FLAG_ACTIVITY_CLEAR_TOP 의 한계 해결  
 
 `FLAG_ACTIVITY_CLEAR_TOP` 플래그는 한계가 있다. 태스크에 ActivityA가 여러 개 있는 상태에서 ActivityA를 `FLAG_ACTIVITY_CLEAR_TOP` 플래그를 사용하여 호출하면 어떻게 될까? 본래 의도가 맨 아래에 있는 ActivityA만 남기는 것이라면 원하는대로 동작하지 않을 것이다. 맨 위에 있는 ActivityA를 기준으로 clear top이 되어서 Activity는 여전히 여러 개 남게 된다.  
 
